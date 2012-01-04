@@ -5,7 +5,7 @@
 # Author: 	Guillaume Seigneuret
 # Date: 	04.01.2012
 # Last mod	04.01.2012
-# Version:	1.0a
+# Version:	1.0b
 # 
 # Usage:	gdc <projet> <branch>
 # 
@@ -38,20 +38,26 @@ use warnings;
 use IO::Socket;
 use Config::Auto;
 
+$| =1;
+
 {
 	my $config = Config::Auto::parse();
 
 	die("Please, provide the project name and the branch as argument\n") 
 		if not defined($ARGV[0]) and not defined($ARGV[1]);
 
-	my $project = $ARGV[0];
+	my $project_name = $ARGV[0];
+	my $project = $1 if $project_name =~ /\/(.*).git/;
 	my $branch = $ARGV[1];
 
 	$branch = $1 if $branch =~ /\/(.*)$/;
 
+	die "Project : $project not configured\n" if not defined($config->{$project});
+
 	my $address 	= trim($config->{$project}->{address});
 	my $port	= trim($config->{$project}->{port});
 
+	con_and_command($address, $port,"Project: $project_name Branch: $branch");
 
 }
 
@@ -65,13 +71,15 @@ sub con_and_command {
 	                                   PeerPort => $port)
 	or die "Failed : $@\n";
 	
-	print "*** Debut de connexion ***\n";
+	#print "*** Debut de connexion ***\n";
 
-	#while(my $reponse=<$socket>){
-	print $socket $;
-	print $socket "quit";
-
-	print "*** Fin de connexion ***\n";
+	while(my $reponse=<$socket>){
+		print $socket $string."\r\n";
+		print $socket "quit\r\n";
+		print $reponse;
+	}
+	#print "*** Fin de connexion ***\n";
+	close($socket);
 }
 
 sub trim
