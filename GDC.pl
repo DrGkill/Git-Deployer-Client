@@ -45,13 +45,13 @@ $| =1;
 	my $config = Config::Auto::parse();
 
 	die("Please, provide the project name and the branch as argument\n") 
-		if ( (not defined($ARGV[0]) or not defined $ENV{SSH_ORIGINAL_COMMAND}) 
-			and not defined($ARGV[1]) );
+		if ( (not defined($ARGV[1]) or not defined $ENV{SSH_ORIGINAL_COMMAND}) 
+			and not defined($ARGV[0]) );
 
-	my $project_name = $ARGV[0] if defined $ARGV[0];
+	my $project_name = $ARGV[1] if defined $ARGV[1];
 	my $project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*)'/;
 	my $project = $1 if $project_name =~ /\/(.*).git/;
-	my $branch = $ARGV[1];
+	my $branch = $ARGV[0];
 
 	$branch = $1 if $branch =~ /\/(.*)$/;
 
