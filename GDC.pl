@@ -11,7 +11,8 @@
 # 
 # Usage domain: To be executed by git hook (post-update script) 
 # 
-# Args :	Project name AND Branch name are mandatory	
+# Args :	Project name AND Branch name are mandatory if the environmental
+# 		variable SSH_ORIGINAL_COMMAND is not set.	
 #
 # Config: 	Every parameters must be described in the config file
 # 
@@ -44,9 +45,11 @@ $| =1;
 	my $config = Config::Auto::parse();
 
 	die("Please, provide the project name and the branch as argument\n") 
-		if not defined($ARGV[0]) and not defined($ARGV[1]);
+		if ( (not defined($ARGV[0]) or not defined $ENV{SSH_ORIGINAL_COMMAND}) 
+			and not defined($ARGV[1]) );
 
-	my $project_name = $ARGV[0];
+	my $project_name = $ARGV[0] if defined $ARGV[0];
+	my $project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*)'/;
 	my $project = $1 if $project_name =~ /\/(.*).git/;
 	my $branch = $ARGV[1];
 
