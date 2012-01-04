@@ -52,9 +52,9 @@ $| =1;
 	$project_name = $ARGV[1] if defined $ARGV[1];
 	$project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*)'/;
 	my $project = $1 if $project_name =~ /\/(.*).git/;
-	my $branch = $ARGV[0];
+	chomp(my $branch = $ARGV[0]);
 
-	$branch = $1 if $branch =~ /\/(.*)$/;
+	$branch = $1 if $branch =~ /\/(\w+)$/;
 
 	die "Project : $project not configured\n" if not defined($config->{$project});
 
@@ -78,9 +78,13 @@ sub con_and_command {
 	#print "*** Debut de connexion ***\n";
 
 	while(my $reponse=<$socket>){
-		print $socket $string."\r\n";
-		print $socket "quit\r\n";
 		print $reponse;
+		
+		if($reponse =~ /please make your request/){
+			print $socket $string."\r\n";
+		}
+
+		print $socket "quit\n\r";	
 	}
 	#print "*** Fin de connexion ***\n";
 	close($socket);
