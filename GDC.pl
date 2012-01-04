@@ -1,0 +1,88 @@
+#!/usr/bin/perl
+
+###############################################################################
+# Script Name:	Git Deployer Client
+# Author: 	Guillaume Seigneuret
+# Date: 	04.01.2012
+# Last mod	04.01.2012
+# Version:	1.0a
+# 
+# Usage:	gdc <projet> <branch>
+# 
+# Usage domain: To be executed by git hook (post-update script) 
+# 
+# Args :	Project name AND Branch name are mandatory	
+#
+# Config: 	Every parameters must be described in the config file
+# 
+# Config file:	Must be the name of the script (with .config or rc extension), 
+# 		located in /etc or the same path as the script
+# 
+#   Copyright (C) 2012 Guillaume Seigneuret (Omega Cube)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>		 
+###############################################################################
+
+use strict;
+use warnings;
+use IO::Socket;
+use Config::Auto;
+
+{
+	my $config = Config::Auto::parse();
+
+	die("Please, provide the project name and the branch as argument\n") 
+		if not defined($ARGV[0]) and not defined($ARGV[1]);
+
+	my $project = $ARGV[0];
+	my $branch = $ARGV[1];
+
+	$branch = $1 if $branch =~ /\/(.*)$/;
+
+	my $address 	= trim($config->{$project}->{address});
+	my $port	= trim($config->{$project}->{port});
+
+
+}
+
+
+
+sub con_and_command {
+	my ($address, $port, $string) = @_;
+
+	my $socket = IO::Socket::INET->new(Proto    => "tcp",
+	                                   PeerAddr => $address,
+	                                   PeerPort => $port)
+	or die "Failed : $@\n";
+	
+	print "*** Debut de connexion ***\n";
+
+	#while(my $reponse=<$socket>){
+	print $socket $;
+	print $socket "quit";
+
+	print "*** Fin de connexion ***\n";
+}
+
+sub trim
+{
+    my @out = @_;
+    for (@out)
+    {
+        s/^\s+//;
+        s/\s+$//;
+    }
+    return wantarray ? @out : $out[0];
+}
+__END__
+
