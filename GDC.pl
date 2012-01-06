@@ -58,8 +58,8 @@ $| =1;
 
 	die "Project : $project not configured\n" if not defined($config->{$project});
 
-	my $address 	= trim($config->{$project}->{address});
-	my $port	= trim($config->{$project}->{port});
+	my $address 	= trim($config->{"$project/$branch"}->{address});
+	my $port	= trim($config->{"$project/$branch"}->{port});
 
 	con_and_command($address, $port,"Project: $project_name Branch: $branch");
 
