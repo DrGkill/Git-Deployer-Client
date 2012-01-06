@@ -38,11 +38,14 @@ use strict;
 use warnings;
 use IO::Socket;
 use Config::Auto;
+use Data::Dumper;
 
 $| =1;
 
 {
 	my $config = Config::Auto::parse();
+
+	print Dumper($config);
 
 	die("Please, provide the project name and the branch as argument\n") 
 		if ( (not defined($ARGV[1]) or not defined $ENV{SSH_ORIGINAL_COMMAND}) 
@@ -56,7 +59,7 @@ $| =1;
 
 	$branch = $1 if $branch =~ /\/(\w+)$/;
 
-	die "Project : $project not configured\n" if not defined($config->{$project});
+	die "Project : $project/$branch not configured\n" if not defined($config->{$project});
 
 	my $address 	= trim($config->{"$project/$branch"}->{address});
 	my $port	= trim($config->{"$project/$branch"}->{port});
