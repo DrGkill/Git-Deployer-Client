@@ -59,7 +59,7 @@ $| =1;
 
 	$branch = $1 if $branch =~ /\/(\w+)$/;
 
-	die "Project : $project/$branch not configured\n" if not defined($config->{$project});
+	die "Project : $project/$branch not configured\n" if not defined($config->{"$project/$branch"});
 
 	my $address 	= trim($config->{"$project/$branch"}->{address});
 	my $port	= trim($config->{"$project/$branch"}->{port});
