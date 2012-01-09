@@ -54,7 +54,7 @@ $| =1;
 	my $project_name = "";
 	$project_name = $ARGV[1] if defined $ARGV[1];
 	$project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*)'/;
-	my $project = $1 if $project_name =~ /\/(.*).git/;
+	my $project = $1 if $project_name =~ /.*\/(.*).git/;
 	chomp(my $branch = $ARGV[0]);
 
 	$branch = $1 if $branch =~ /\/(\w+)$/;
