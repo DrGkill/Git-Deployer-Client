@@ -66,7 +66,7 @@ $| =1;
 
 	my @addresses 	= split(";", trim($config->{"$project/$branch"}->{address}));
 
-	con_and_command($address, "Project: $project_name Branch: $branch") foreach $address (@addresses);
+	con_and_command($_, "Project: $project_name Branch: $branch") foreach (@addresses);
 
 }
 
