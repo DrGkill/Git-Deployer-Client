@@ -61,23 +61,25 @@ $| =1;
 
 	$branch = $1 if $branch =~ /\/(\w+)$/;
 
+	print "Project : $project/$branch not configured\n" if not defined($config->{"$project/$branch"});
 	die "Project : $project/$branch not configured\n" if not defined($config->{"$project/$branch"});
 
-	my $address 	= trim($config->{"$project/$branch"}->{address});
-	my $port	= trim($config->{"$project/$branch"}->{port});
+	my @addresses 	= split(";", trim($config->{"$project/$branch"}->{address}));
 
-	con_and_command($address, $port,"Project: $project_name Branch: $branch");
+	con_and_command($address, "Project: $project_name Branch: $branch") foreach $address (@addresses);
 
 }
 
 
 
 sub con_and_command {
-	my ($address, $port, $string) = @_;
+	my ($address, $string) = @_;
+
+	
 
 	my $socket = IO::Socket::INET->new(Proto    => "tcp",
 	                                   PeerAddr => $address,
-	                                   PeerPort => $port)
+	                                  )
 	or die "Failed : $@\n";
 	
 	#print "*** Debut de connexion ***\n";

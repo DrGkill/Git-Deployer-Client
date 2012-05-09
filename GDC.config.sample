@@ -1,11 +1,10 @@
 # Imagine a Gitorious project named test/test.git, just record the conf
 # with test
 [test]
-	address = 192.168.0.1
-	port 	= 32337
+	address = 192.168.0.1:32337;127.0.0.1:32337;192.168.0.6:8888
+
 
 [toto]
-	address = 192.168.10.25
-	port	= 32337
+	address = 192.168.10.25;32337
 
 [end]
