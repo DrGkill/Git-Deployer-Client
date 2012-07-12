@@ -91,7 +91,7 @@ sub con_and_command {
 			print $socket $string."\r\n";
 		}
 
-		print $socket "quit\n\r";	
+		#print $socket "quit\n\r";	
 	}
 	#print "*** Fin de connexion ***\n";
 	close($socket);
