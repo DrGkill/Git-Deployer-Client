@@ -1,10 +1,15 @@
 # Imagine a Gitorious project named test/test.git, just record the conf
 # with test
-[test]
+# Imagine a Gitorious project named test/test.git, just record the conf
+# with test
+[test/mybranch]
+	# If the project has to be loaded onto multiple servers
 	address = 192.168.0.1:32337;127.0.0.1:32337;192.168.0.6:8888
 
+[test/master]
+	# Here the master branch of the project has to be updated on one server
+	address = my.testprod.com:32337
 
-[toto]
-	address = 192.168.10.25:32337
 
-[end]
+[toto/master]
+	address = 192.168.10.25:32337]
