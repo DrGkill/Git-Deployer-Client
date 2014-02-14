@@ -54,6 +54,7 @@ $| =1;
 	my $project_name = "";
 	my $project = "";
 	$project_name = $ARGV[1] if defined $ARGV[1];
+	$project_name = "$1.git" if $ENV{SSH_ORIGINAL_COMMAND} =~ /git-receive-pack '(.*)'/;
 	$project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*.git)/;
 	$project = $1 if $project_name =~ /.*\/(.*).git/;
 	$project = $1 if $project_name =~ /(.*).git/ and $project eq "";
@@ -80,7 +81,7 @@ sub con_and_command {
 	my $socket = IO::Socket::INET->new(Proto    => "tcp",
 	                                   PeerAddr => $address,
 	                                  )
-	or die "Failed : $@\n";
+	or die "Connexion to $address failed : $@\n";
 	
 	#print "*** Debut de connexion ***\n";
 
