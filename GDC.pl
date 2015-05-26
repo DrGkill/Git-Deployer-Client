@@ -54,10 +54,10 @@ $| =1;
 	my $project_name = "";
 	my $project = "";
 	$project_name = $ARGV[1] if defined $ARGV[1];
-	$project_name = "$1.git" if $ENV{SSH_ORIGINAL_COMMAND} =~ /git-receive-pack '(.*)'/;
-	$project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*.git)/;
-	$project = $1 if $project_name =~ /.*\/(.*).git/;
-	$project = $1 if $project_name =~ /(.*).git/ and $project eq "";
+	$project_name = "$1.git" if defined($ENV{SSH_ORIGINAL_COMMAND}) and $ENV{SSH_ORIGINAL_COMMAND} =~ /git-receive-pack '(.*)'/;
+	$project_name = $1 if defined($ENV{SSH_ORIGINAL_COMMAND}) and $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*\.git)/;
+	$project = $1 if $project_name =~ /.*\/(.*)\.git/;
+	$project = $1 if $project_name =~ /(.*)\.git/ and $project eq "";
 	chomp(my $branch = $ARGV[0]);
 
 	$branch = $1 if $branch =~ /\/(\w+)$/;
