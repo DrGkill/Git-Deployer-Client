@@ -39,12 +39,12 @@ use warnings;
 use IO::Socket;
 use Config::Auto;
 use Data::Dumper;
+use IO::Handle;
 
 $| =1;
 
 {
 	my $config = Config::Auto::parse();
-
 	#print Dumper($config);
 
 	die("Please, provide the project name and the branch as argument\n") 
@@ -86,7 +86,11 @@ sub con_and_command {
 	#print "*** Debut de connexion ***\n";
 
 	while(my $reponse=<$socket>){
-		print $reponse;
+        if(substr($reponse, 0, 1) ne "\b") {
+            print "\n";
+        }
+        print substr($reponse, 0, -1);
+        STDOUT->flush();
 		
 		if($reponse =~ /please make your request/){
 			print $socket $string."\r\n";
