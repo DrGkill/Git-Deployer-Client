@@ -39,12 +39,12 @@ use warnings;
 use IO::Socket;
 use Config::Auto;
 use Data::Dumper;
+use IO::Handle;
 
 $| =1;
 
 {
 	my $config = Config::Auto::parse();
-
 	#print Dumper($config);
 
 	die("Please, provide the project name and the branch as argument\n") 
@@ -54,10 +54,10 @@ $| =1;
 	my $project_name = "";
 	my $project = "";
 	$project_name = $ARGV[1] if defined $ARGV[1];
-	$project_name = "$1.git" if $ENV{SSH_ORIGINAL_COMMAND} =~ /git-receive-pack '(.*)'/;
-	$project_name = $1 if $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*.git)/;
-	$project = $1 if $project_name =~ /.*\/(.*).git/;
-	$project = $1 if $project_name =~ /(.*).git/ and $project eq "";
+	$project_name = "$1.git" if defined($ENV{SSH_ORIGINAL_COMMAND}) and $ENV{SSH_ORIGINAL_COMMAND} =~ /git-receive-pack '(.*)'/;
+	$project_name = $1 if defined($ENV{SSH_ORIGINAL_COMMAND}) and $ENV{SSH_ORIGINAL_COMMAND} =~ /'(.*\.git)/;
+	$project = $1 if $project_name =~ /.*\/(.*)\.git/;
+	$project = $1 if $project_name =~ /(.*)\.git/ and $project eq "";
 	chomp(my $branch = $ARGV[0]);
 
 	$branch = $1 if $branch =~ /\/(\w+)$/;
@@ -86,7 +86,11 @@ sub con_and_command {
 	#print "*** Debut de connexion ***\n";
 
 	while(my $reponse=<$socket>){
-		print $reponse;
+        if(substr($reponse, 0, 1) ne "\b") {
+            print "\n";
+        }
+        print substr($reponse, 0, -1);
+        STDOUT->flush();
 		
 		if($reponse =~ /please make your request/){
 			print $socket $string."\r\n";
